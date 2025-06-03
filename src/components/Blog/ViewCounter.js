@@ -2,8 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js'
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables. Please check your .env file.');
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const ViewCounter = ({ slug, noCount = false, showCount = true }) => {
   const [views, setViews] = useState(0);
@@ -36,15 +42,14 @@ const ViewCounter = ({ slug, noCount = false, showCount = true }) => {
     const getViews = async () => {
       try {
         let { data, error } = await supabase
-  .from('views')
-  .select('count')
-  .match({slug: slug})
-  .single()
+          .from('views')
+          .select('count')
+          .match({slug: slug})
+          .single()
 
         if (error){
             console.error("Error incrementing view count inside try block:", error)
         };
-
 
         setViews(data ? data.count : 0)
         
@@ -56,7 +61,7 @@ const ViewCounter = ({ slug, noCount = false, showCount = true }) => {
       }
     };
 
-        getViews();
+    getViews();
   }, [slug]);
 
   if (showCount) {

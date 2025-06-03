@@ -12,7 +12,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const {slug} = await params
+  const slug = params.slug;
   const blog = blogs.find((blog) => blog.slug === slug);
   if (!blog) {
     return;
@@ -58,7 +58,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-
 function TableOfContentsItem({ item, level = "two" }){
   return (
     <li className="py-1">
@@ -91,8 +90,8 @@ function TableOfContentsItem({ item, level = "two" }){
   );
 }
 
-export default async function BlogPage({ params }) {
-  const {slug} = await params
+export default function BlogPage({ params }) {
+  const slug = params.slug;
   const blog = blogs.find((blog) => {
     return blog.slug === slug
   });
@@ -157,7 +156,7 @@ export default async function BlogPage({ params }) {
           sizes="100vw"
         />
       </div>
-      <BlogDetails blog={blog} slug={params.slug} />
+      <BlogDetails blog={blog} slug={slug} />
 
       <div className="grid grid-cols-12  gap-y-8 lg:gap-8 sxl:gap-16 mt-8 px-5 md:px-10">
         <div className="col-span-12  lg:col-span-4">
